@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "490267367105",
+    "project_id": "access-control-system-aa610",
+    "storage_bucket": "access-control-system-aa610.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490267367105:android:671daa5aaf29371a526640",
+        "android_client_info": {
+          "package_name": "com.example.access_control_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490267367105-gqu44qbi9d165cpkqh02aia4kbai6vnt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9BcVABliKsDqfNn8gCjRyTXCElOkH5nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490267367105-gqu44qbi9d165cpkqh02aia4kbai6vnt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
