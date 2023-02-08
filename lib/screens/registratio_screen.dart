@@ -1,31 +1,35 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:access_control_system/screens/mainscreen.dart';
-import 'package:access_control_system/screens/registratio_screen.dart';
-import 'package:access_control_system/widgets/custom_passwordField.dart';
+import 'package:access_control_system/screens/login_screen.dart';
+import 'package:access_control_system/widgets/loading_animation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_passwordField.dart';
 import '../widgets/custom_textbutton.dart';
 import '../widgets/custom_textfield.dart';
-import '../widgets/loading_animation.dart';
 import '../widgets/snackbar.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String route = "/login_screen";
+class RegistrationScreen extends StatefulWidget {
+  static const String route = "/registration_screen";
 
+  const RegistrationScreen({super.key});
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  var fullnameController = TextEditingController();
+
   var emailController = TextEditingController();
 
   var passwordController = TextEditingController();
 
-  Future login() async {
+  var confirmPasswordController = TextEditingController();
+
+  Future registerUser() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -33,25 +37,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     try {
       final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
         password: passwordController.text,
       );
       final User? user = userCredential.user;
+
       if (user != null) {
-        final userRef =
+        final newUserRef =
             FirebaseFirestore.instance.collection("users").doc(user.uid);
-        userRef.get().then(
-          (DocumentSnapshot doc) {
-            //this is user data
-            final data = doc.data() as Map<String, dynamic>;
-          },
-          onError: (e) => print("Error getting document: $e"),
-        );
+
+        final userData = {
+          "fullname": fullnameController.text,
+          "email": emailController.text,
+          "doorStatus": "close",
+          'lightStatus': "off"
+        };
+
+        await newUserRef.set(userData);
+        Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(
+            context, LoginScreen.route, (route) => false);
       }
-      Navigator.pop(context);
-      Navigator.pushNamedAndRemoveUntil(
-          context, MainScreen.route, (route) => false);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       showSnackBar(e.message.toString(), context);
@@ -69,19 +76,26 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               SizedBox(
-                  height: size.height * 0.35,
+                  height: size.height * 0.25,
                   child: Align(
                     alignment: Alignment.center,
                     child: Image.asset(
                       "assets/images/Icon_doorKnob.png",
-                      height: 300,
-                      width: 300,
+                      height: 250,
+                      width: 250,
                       fit: BoxFit.cover,
                       color: const Color.fromARGB(255, 207, 134, 26),
                     ),
                   )),
               Column(
                 children: [
+                  CustomTextField(
+                    emailController: fullnameController,
+                    hintText: "Full Name",
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   CustomTextField(
                     emailController: emailController,
                     hintText: "Email",
@@ -93,22 +107,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       passwordController: passwordController,
                       passwordVisible: true,
                       title: "Password"),
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 10, top: 12),
-                        child: Text(
-                          "Recover password",
-                          style: TextStyle(
-                              fontFamily: 'Roboto', color: Colors.black54),
-                        ),
-                      )),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CustomPasswordField(
+                      passwordController: confirmPasswordController,
+                      passwordVisible: true,
+                      title: "Confirm Password"),
                   const SizedBox(
                     height: 35,
                   ),
                   CustomTextButton(
                     size: size,
-                    title: "Sign In",
+                    title: "Sign Up",
                     onPressed: () async {
                       //checking connectivity to network. funtion needs to be async
                       var connectivityResult =
@@ -116,6 +127,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (connectivityResult != ConnectivityResult.mobile &&
                           connectivityResult != ConnectivityResult.wifi) {
                         showSnackBar("No internet connection!", context);
+                        return;
+                      }
+
+                      if (fullnameController.text.length <= 3) {
+                        showSnackBar("Please enter a valid name!", context);
                         return;
                       }
 
@@ -130,7 +146,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
 
-                      login();
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
+                        showSnackBar("Password doesnot match", context);
+                        return;
+                      }
+
+                      registerUser();
                     },
                   ),
                   const SizedBox(
@@ -148,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Not a member?",
+                        "Already have an account?",
                         style: TextStyle(
                           fontFamily: "Roboto",
                           fontWeight: FontWeight.w500,
@@ -157,11 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                RegistrationScreen.route, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, LoginScreen.route, (route) => false);
                           },
                           child: Text(
-                            "Register Now",
+                            "Sign In",
                             style: TextStyle(
                               fontFamily: "Roboto",
                               color: Theme.of(context).primaryColor,
