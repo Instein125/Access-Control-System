@@ -51,7 +51,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           "fullname": fullnameController.text,
           "email": emailController.text,
           "doorStatus": "close",
-          'lightStatus': "off"
+          'lightStatus': "off",
+          "smokePercent": "0.0",
         };
 
         await newUserRef.set(userData);
