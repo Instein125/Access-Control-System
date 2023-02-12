@@ -1,8 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:access_control_system/provider/notification_manager.dart';
 import 'package:access_control_system/screens/login_screen.dart';
 import 'package:access_control_system/screens/mainscreen.dart';
 import 'package:access_control_system/screens/notification_screen.dart';
 import 'package:access_control_system/screens/registratio_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +15,25 @@ import 'package:provider/provider.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  addNotification(message.data);
+}
 
-  print("Handling a background message: ${message.messageId}");
+final navigatorKey = GlobalKey<NavigatorState>();
+
+void addNotification(Map<String, dynamic> notificationData) {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  final notificationRef = FirebaseFirestore.instance
+      .collection("users")
+      .doc(currentUser!.uid)
+      .collection("notifications")
+      .doc();
+  notificationRef.set({
+    "title": notificationData["title"],
+    "message": notificationData["message"],
+    "date": notificationData["date"],
+    "time": notificationData["time"],
+  });
 }
 
 void main() async {
@@ -21,12 +41,42 @@ void main() async {
   await Firebase.initializeApp();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
+    Map<String, dynamic> data = message.data;
 
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
+    if (navigatorKey.currentContext != null) {
+      showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (_) => AlertDialog(
+                backgroundColor: Colors.white,
+                icon: Image.asset(
+                  "assets/images/Fire_safety_1-removebg-preview.png",
+                  height: 200,
+                  width: 200,
+                ),
+                title: Text(message.data["title"]),
+                elevation: 40,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                actions: [
+                  TextButton(
+                      onPressed: () {},
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(navigatorKey.currentContext!);
+                        },
+                        child: const Text(
+                          "Ok",
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue),
+                        ),
+                      ))
+                ],
+              ));
     }
+    addNotification(message.data);
   });
 
   try {
@@ -47,6 +97,7 @@ class MyApp extends StatelessWidget {
       create: (context) => NotificationProvider(),
       child: MaterialApp(
         title: 'Flutter Demo',
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             backgroundColor: const Color(0xFFF0F0F0),

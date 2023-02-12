@@ -1,4 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:access_control_system/dummy_data.dart';
+import 'package:access_control_system/models/notification_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -10,8 +15,50 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  late final CollectionReference documentRef;
+  var notificationList = [];
+  @override
+  void initState() {
+    super.initState();
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    fetchNotifications(currentUser!.uid);
+  }
+
+  fetchNotifications(String uid) async {
+    var noti = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .collection("notifications")
+        .get();
+    mapNotifications(noti);
+  }
+
+  mapNotifications(QuerySnapshot<Map<String, dynamic>> snapshot) {
+    var list = snapshot.docs
+        .map((notification) => NotificationModel(
+            title: notification["title"],
+            message: notification["message"],
+            date: notification["date"],
+            time: notification["time"],
+            id: notification.id))
+        .toList();
+    setState(() {
+      notificationList = list.reversed.toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    void deleteNotification(String id) {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc(currentUser!.uid)
+          .collection("notifications")
+          .doc(id)
+          .delete();
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme:
@@ -31,23 +78,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: ListView.builder(
-        itemCount: notiList.length,
+        itemCount: notificationList.length,
         itemBuilder: (context, index) {
-          final item = notiList[index];
+          final item = notificationList[index];
           return Dismissible(
-            key: Key(item.time),
+            key: Key(item.id),
             onDismissed: (direction) {
-              setState(() {});
+              setState(() {
+                deleteNotification(item.id);
+                notificationList.removeAt(index);
+              });
             },
             direction: DismissDirection.endToStart,
             background: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               padding: const EdgeInsets.only(right: 20),
-              decoration: const BoxDecoration(
-                  // border: Border.all(
-                  //     color: Color.fromRGBO(144, 202, 249, 1), width: 2),
-                  // borderRadius: BorderRadius.circular(20),
-                  color: Colors.red),
+              decoration: const BoxDecoration(color: Colors.red),
               alignment: Alignment.centerRight,
               child: const Icon(
                 Icons.delete,
@@ -56,10 +102,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             ),
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                   border: Border.all(
-                      color: Color.fromRGBO(144, 202, 249, 1), width: 2),
+                      color: const Color.fromRGBO(144, 202, 249, 1), width: 2),
                   borderRadius: BorderRadius.circular(20)),
               child: ListTile(
                 contentPadding: const EdgeInsets.only(left: 20),
@@ -69,7 +115,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   size: 30,
                 ),
                 title: Text(
-                  notiList[index].title.toUpperCase(),
+                  notificationList[index].title.toUpperCase(),
                   style: const TextStyle(
                     fontFamily: "Roboto",
                     fontWeight: FontWeight.w500,
@@ -82,7 +128,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        notiList[index].date,
+                        notificationList[index].date,
                         style: const TextStyle(
                             fontFamily: "Roboto",
                             fontWeight: FontWeight.w500,
@@ -90,7 +136,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       Text(
-                        notiList[index].time,
+                        notificationList[index].time,
                         style: const TextStyle(
                             fontFamily: "Roboto",
                             fontWeight: FontWeight.w500,
@@ -101,7 +147,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ),
                 subtitle: Text(
-                  notiList[index].message,
+                  notificationList[index].message,
                   style: const TextStyle(
                       fontFamily: "Roboto",
                       fontWeight: FontWeight.w500,

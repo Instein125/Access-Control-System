@@ -347,7 +347,7 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class CustomDrawer extends StatefulWidget {
-  CustomDrawer({
+  const CustomDrawer({
     Key? key,
     required this.userRef,
   }) : super(key: key);
