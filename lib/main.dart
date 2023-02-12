@@ -1,6 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
-import 'package:access_control_system/provider/notification_manager.dart';
 import 'package:access_control_system/screens/login_screen.dart';
 import 'package:access_control_system/screens/mainscreen.dart';
 import 'package:access_control_system/screens/notification_screen.dart';
@@ -10,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -93,32 +90,28 @@ class MyApp extends StatelessWidget {
   User? currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => NotificationProvider(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            backgroundColor: const Color(0xFFF0F0F0),
-            primaryColor: const Color(0xFF49299A),
-            primarySwatch: Colors.blue,
-            textTheme: const TextTheme(
-              headline6:
-                  TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.w800),
-              bodyText2: TextStyle(
-                fontFamily: "Roboto",
-              ),
-            )),
-        initialRoute:
-            currentUser == null ? LoginScreen.route : MainScreen.route,
-        routes: {
-          LoginScreen.route: (context) => LoginScreen(),
-          RegistrationScreen.route: (context) => const RegistrationScreen(),
-          MainScreen.route: (context) => MainScreen(),
-          NotificationScreen.route: (context) => NotificationScreen(),
-        },
-      ),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          backgroundColor: const Color(0xFFF0F0F0),
+          primaryColor: const Color(0xFF49299A),
+          primarySwatch: Colors.blue,
+          textTheme: const TextTheme(
+            headline6:
+                TextStyle(fontFamily: "Roboto", fontWeight: FontWeight.w800),
+            bodyText2: TextStyle(
+              fontFamily: "Roboto",
+            ),
+          )),
+      initialRoute: currentUser == null ? LoginScreen.route : MainScreen.route,
+      routes: {
+        LoginScreen.route: (context) => LoginScreen(),
+        RegistrationScreen.route: (context) => const RegistrationScreen(),
+        MainScreen.route: (context) => MainScreen(),
+        NotificationScreen.route: (context) => const NotificationScreen(),
+      },
     );
   }
 }
