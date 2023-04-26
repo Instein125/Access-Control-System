@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:access_control_system/dummy_data.dart';
 import 'package:access_control_system/models/notification_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

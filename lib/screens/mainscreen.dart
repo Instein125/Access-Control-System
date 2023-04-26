@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:lottie/lottie.dart';
 
 import '../widgets/loading_animation.dart';
 import '../widgets/snackbar.dart';
@@ -219,14 +220,30 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(
-              Icons.lightbulb_outline_rounded,
-              // Icons.lightbulb_rounded,
-              color: Theme.of(context).primaryColor,
-              // color: Colors.amber[0],
+            // Icon(
+            //   Icons.lightbulb_outline_rounded,
+            //   // Icons.lightbulb_rounded,
+            //   color: Theme.of(context).primaryColor,
+            //   // color: Colors.amber[0],
 
-              size: 90,
+            //   size: 90,
+            // ),
+
+            Container(
+              height: 90,
+              child: OverflowBox(
+                maxHeight: 250,
+                maxWidth: 300,
+                child: LottieBuilder.asset(
+                  "assets/images/lightbulb.json",
+                  alignment: Alignment.center,
+                  fit: BoxFit.cover,
+                  // animate: false,
+                  height: 300,
+                ),
+              ),
             ),
+
             const Text(
               "Light",
               style: TextStyle(
@@ -294,11 +311,26 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(
-              Icons.door_back_door_outlined,
-              color: Theme.of(context).primaryColor,
-              size: 90,
+            // Icon(
+            //   Icons.door_back_door_outlined,
+            //   color: Theme.of(context).primaryColor,
+            //   size: 90,
+            // ),
+            Container(
+              height: 90,
+              child: OverflowBox(
+                maxHeight: 110,
+                maxWidth: 120,
+                child: LottieBuilder.asset(
+                  "assets/images/door.json",
+                  alignment: Alignment.center,
+                  fit: BoxFit.cover,
+                  // animate: false,
+                  height: 300,
+                ),
+              ),
             ),
+
             const Text(
               "Door",
               style: TextStyle(
