@@ -20,12 +20,14 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   // String doorStatus = "Close";
   // String lightStatus = "On";
   // double smokePercent = 0.6;
   late User? currentUser;
   late final DocumentReference userRef;
+  late final AnimationController _lightController;
+  late final AnimationController _doorController;
 
   @override
   void initState() {
@@ -40,6 +42,15 @@ class _MainScreenState extends State<MainScreen> {
     }
     userRef =
         FirebaseFirestore.instance.collection("users").doc(currentUser!.uid);
+    _lightController = AnimationController(vsync: this);
+    _doorController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _lightController.dispose();
+    _doorController.dispose();
+    super.dispose();
   }
 
   @override
@@ -165,9 +176,9 @@ class _MainScreenState extends State<MainScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(
+            const Icon(
               Icons.fireplace_rounded,
-              color: Theme.of(context).primaryColor,
+              color: Color.fromARGB(221, 45, 45, 45),
               size: 90,
             ),
             const Text(
@@ -240,6 +251,13 @@ class _MainScreenState extends State<MainScreen> {
                   fit: BoxFit.cover,
                   // animate: false,
                   height: 300,
+                  controller: _lightController,
+                  onLoaded: (composition) {
+                    _lightController.duration = composition.duration;
+                    if (lightStatus == "On") {
+                      _lightController.forward();
+                    }
+                  },
                 ),
               ),
             ),
@@ -274,9 +292,13 @@ class _MainScreenState extends State<MainScreen> {
               onChanged: (value) {
                 setState(() {
                   if (lightStatus == "Off") {
+                    _lightController.forward();
+
                     userRef.update({"lightStatus": "On"});
                     // lightStatus = "On";
                   } else {
+                    _lightController.reverse();
+
                     userRef.update({"lightStatus": "Off"});
                     // lightStatus = "Off";
                   }
@@ -325,6 +347,13 @@ class _MainScreenState extends State<MainScreen> {
                   "assets/images/door.json",
                   alignment: Alignment.center,
                   fit: BoxFit.cover,
+                  controller: _doorController,
+                  onLoaded: (comp) {
+                    _doorController.duration = comp.duration;
+                    if (doorStatus == "Open") {
+                      _doorController.forward();
+                    }
+                  },
                   // animate: false,
                   height: 300,
                 ),
@@ -361,9 +390,11 @@ class _MainScreenState extends State<MainScreen> {
               onChanged: (value) {
                 setState(() {
                   if (doorStatus == "Open") {
+                    _doorController.reverse();
                     userRef.update({"doorStatus": "Close"});
                     // doorStatus = "Close";
                   } else {
+                    _doorController.forward();
                     userRef.update({"doorStatus": "Open"});
                     // doorStatus = "Open";
                   }
