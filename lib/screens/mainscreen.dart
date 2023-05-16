@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
 
@@ -33,6 +34,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     currentUser = FirebaseAuth.instance.currentUser;
+    String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    print(date);
 
     if (currentUser != null) {
       PushNotificationService pushNotificationService =
@@ -196,7 +199,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               percent: percent,
               footer: Text(
                 "${(percent * 100).round()}%",
-                style: TextStyle(fontFamily: "Roboto", fontSize: 16.0),
+                style: const TextStyle(fontFamily: "Roboto", fontSize: 16.0),
               ),
               circularStrokeCap: CircularStrokeCap.round,
               progressColor: percent > 0.5
