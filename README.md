@@ -1,16 +1,8 @@
 # access_control_system
 
-A new Flutter project.
+This an access control app created as a minor project.
+It allows us to remotely access the door, light and notify in case of fire.
 
-## Getting Started
+Some screenshots:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Untitled design](https://user-images.githubusercontent.com/83692376/235205687-01b852d9-5072-4d5f-b1b9-99d81f556128.png)
