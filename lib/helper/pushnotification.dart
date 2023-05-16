@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -15,13 +17,11 @@ class PushNotificationService {
       sound: true,
     );
     String? token = await fcm.getToken();
-    print("Token: $token");
+
     try {
       final tokenRef = FirebaseFirestore.instance.collection("users").doc(uid);
 
       tokenRef.update({"token": token});
-    } catch (error) {
-      print(error);
-    }
+    } catch (error) {}
   }
 }

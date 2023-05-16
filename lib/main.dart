@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, empty_catches, must_be_immutable
 import 'package:access_control_system/screens/login_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:access_control_system/screens/mainscreen.dart';
@@ -21,6 +21,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void addNotification(Map<String, dynamic> notificationData) {
   User? currentUser = FirebaseAuth.instance.currentUser;
+  String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
   final notificationRef = FirebaseFirestore.instance
       .collection("users")
       .doc(currentUser!.uid)
@@ -29,7 +30,7 @@ void addNotification(Map<String, dynamic> notificationData) {
   notificationRef.set({
     "title": notificationData["title"],
     "message": notificationData["message"],
-    "date": notificationData["date"],
+    "date": date,
     "time": notificationData["time"],
   });
 }
@@ -39,43 +40,40 @@ void main() async {
   await Firebase.initializeApp();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    Map<String, dynamic> data = message.data;
-    print(message.data);
-
-    // if (navigatorKey.currentContext != null) {
-    //   showDialog(
-    //       context: navigatorKey.currentContext!,
-    //       builder: (_) => AlertDialog(
-    //             backgroundColor: Colors.white,
-    //             icon: Image.asset(
-    //               "assets/images/Fire_safety_1-removebg-preview.png",
-    //               height: 200,
-    //               width: 200,
-    //             ),
-    //             title: Text(message.data["title"]),
-    //             elevation: 40,
-    //             shape: RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(20)),
-    //             actions: [
-    //               TextButton(
-    //                   onPressed: () {},
-    //                   child: TextButton(
-    //                     onPressed: () {
-    //                       Navigator.pop(navigatorKey.currentContext!);
-    //                     },
-    //                     child: const Text(
-    //                       "Ok",
-    //                       style: TextStyle(
-    //                           fontFamily: "Roboto",
-    //                           fontSize: 22,
-    //                           fontWeight: FontWeight.w500,
-    //                           color: Colors.blue),
-    //                     ),
-    //                   ))
-    //             ],
-    //           ));
-    // }
-    // addNotification(message.data);
+    if (navigatorKey.currentContext != null) {
+      showDialog(
+          context: navigatorKey.currentContext!,
+          builder: (_) => AlertDialog(
+                backgroundColor: Colors.white,
+                icon: Image.asset(
+                  "assets/images/Fire_safety_1-removebg-preview.png",
+                  height: 200,
+                  width: 200,
+                ),
+                title: Text(message.data["title"]),
+                elevation: 40,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                actions: [
+                  TextButton(
+                      onPressed: () {},
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pop(navigatorKey.currentContext!);
+                        },
+                        child: const Text(
+                          "Ok",
+                          style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue),
+                        ),
+                      ))
+                ],
+              ));
+    }
+    addNotification(message.data);
   });
 
   try {

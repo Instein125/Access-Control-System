@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, use_key_in_widget_constructors
 
 import 'package:access_control_system/screens/mainscreen.dart';
 import 'package:access_control_system/screens/registratio_screen.dart';
@@ -44,9 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
         userRef.get().then(
           (DocumentSnapshot doc) {
             //this is user data
-            final data = doc.data() as Map<String, dynamic>;
           },
-          onError: (e) => print("Error getting document: $e"),
+          onError: (e) {},
         );
       }
       Navigator.pop(context);

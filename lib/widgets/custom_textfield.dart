@@ -12,12 +12,12 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 45,
       width: double.infinity,
       child: TextField(
         controller: emailController,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
             labelText: hintText,
             border: InputBorder.none,

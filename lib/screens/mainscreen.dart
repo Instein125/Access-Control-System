@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, non_constant_identifier_names
+// ignore_for_file: must_be_immutable, non_constant_identifier_names, use_key_in_widget_constructors, body_might_complete_normally_catch_error
 
 import 'package:access_control_system/helper/pushnotification.dart';
 import 'package:access_control_system/screens/notification_screen.dart';
@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:lottie/lottie.dart';
 
@@ -34,8 +34,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     currentUser = FirebaseAuth.instance.currentUser;
-    String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    print(date);
 
     if (currentUser != null) {
       PushNotificationService pushNotificationService =
@@ -90,7 +88,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               fontWeight: FontWeight.w500,
               fontSize: 30),
         ),
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: const Color(0xFFF0F0F0),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20),
@@ -161,8 +159,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       Size size, BuildContext context, String smokePercent) {
     double percent = double.parse(smokePercent);
     return Container(
-      height: size.height * 0.35,
-      width: size.height * 0.25,
+      height: size.height * 0.3,
+      width: size.width * 0.4,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -189,7 +187,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: "Roboto",
-                  fontSize: 22,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600),
             ),
             CircularPercentIndicator(
@@ -215,8 +213,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Container lightContainer(
       Size size, BuildContext context, String lightStatus) {
     return Container(
-      height: size.height * 0.35,
-      width: size.height * 0.25,
+      height: size.height * 0.3,
+      width: size.width * 0.4,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -243,7 +241,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             //   size: 90,
             // ),
 
-            Container(
+            SizedBox(
               height: 90,
               child: OverflowBox(
                 maxHeight: 250,
@@ -317,8 +315,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   Container DoorContainer(Size size, BuildContext context, String doorStatus) {
     return Container(
-      height: size.height * 0.35,
-      width: size.height * 0.25,
+      height: size.height * 0.3,
+      width: size.width * 0.4,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -341,7 +339,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             //   color: Theme.of(context).primaryColor,
             //   size: 90,
             // ),
-            Container(
+            SizedBox(
               height: 90,
               child: OverflowBox(
                 maxHeight: 110,

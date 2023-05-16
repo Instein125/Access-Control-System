@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, file_names
+
 import 'package:flutter/material.dart';
 
 class CustomPasswordField extends StatefulWidget {
@@ -19,12 +21,12 @@ class CustomPasswordField extends StatefulWidget {
 class _CustomPasswordFieldState extends State<CustomPasswordField> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 45,
       width: double.infinity,
       child: TextField(
         controller: widget.passwordController,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: Theme.of(context).textTheme.bodyMedium,
         obscureText: widget.passwordVisible,
         decoration: InputDecoration(
             labelText: widget.title,
