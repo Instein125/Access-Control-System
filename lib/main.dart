@@ -39,19 +39,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    print("hello");
-
-    NotificationSettings settings =
-        await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
     if (navigatorKey.currentContext != null) {
       showDialog(
           context: navigatorKey.currentContext!,
@@ -90,9 +77,7 @@ void main() async {
 
   try {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  } catch (error) {
-    print(error);
-  }
+  } catch (error) {}
   runApp(MyApp());
 }
 
