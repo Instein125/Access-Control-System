@@ -38,8 +38,20 @@ void addNotification(Map<String, dynamic> notificationData) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    print("hello");
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
     if (navigatorKey.currentContext != null) {
       showDialog(
           context: navigatorKey.currentContext!,
@@ -78,8 +90,9 @@ void main() async {
 
   try {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  } catch (error) {}
-
+  } catch (error) {
+    print(error);
+  }
   runApp(MyApp());
 }
 
@@ -88,10 +101,11 @@ class MyApp extends StatelessWidget {
     super.key,
   });
   User? currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Access Control App',
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
