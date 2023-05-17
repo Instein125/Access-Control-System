@@ -92,16 +92,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       passwordController: passwordController,
                       passwordVisible: true,
                       title: "Password"),
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 10, top: 12),
-                        child: Text(
-                          "Recover password",
-                          style: TextStyle(
-                              fontFamily: 'Roboto', color: Colors.black54),
-                        ),
-                      )),
+                  // const Align(
+                  //     alignment: Alignment.centerRight,
+                  //     child: Padding(
+                  //       padding: EdgeInsets.only(right: 10, top: 12),
+                  //       child: Text(
+                  //         "Recover password",
+                  //         style: TextStyle(
+                  //             fontFamily: 'Roboto', color: Colors.black54),
+                  //       ),
+                  //     )),
                   const SizedBox(
                     height: 35,
                   ),

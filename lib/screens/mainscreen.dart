@@ -528,33 +528,33 @@ class _CustomDrawerState extends State<CustomDrawer> {
               });
             },
           ),
-          ListTile(
-            title: Row(
-              children: [
-                Icon(
-                  Icons.contact_phone_outlined,
-                  color: Theme.of(context).primaryColor,
-                  size: 27,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Contact Us",
-                  style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 20,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
-          ),
+          // ListTile(
+          //   title: Row(
+          //     children: [
+          //       Icon(
+          //         Icons.contact_phone_outlined,
+          //         color: Theme.of(context).primaryColor,
+          //         size: 27,
+          //       ),
+          //       const SizedBox(
+          //         width: 10,
+          //       ),
+          //       Text(
+          //         "Contact Us",
+          //         style: TextStyle(
+          //           fontFamily: "Roboto",
+          //           fontSize: 20,
+          //           color: Theme.of(context).primaryColor,
+          //           fontWeight: FontWeight.w500,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          //   onTap: () {
+          //     // Update the state of the app.
+          //     // ...
+          //   },
+          // ),
         ],
       ),
     );
